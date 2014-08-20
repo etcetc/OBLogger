@@ -1,18 +1,23 @@
 //
 //  OBAppDelegate.m
-//  OBLogger
+//  OBLoggerTest
 //
-//  Created by CocoaPods on 08/19/2014.
-//  Copyright (c) 2014 etcetc. All rights reserved.
+//  Created by Farhad on 8/2/14.
+//  Copyright (c) 2014 OneBeat. All rights reserved.
 //
 
 #import "OBAppDelegate.h"
+#import <OBLogger/OBLogger.h>
 
 @implementation OBAppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     // Override point for customization after application launch.
+    [[OBLogger instance] reset];
+
+    [OBLogger instance].writeToConsole = YES;
+    [[OBLogger instance] logEvent: OBLogEventAppStarted];
     return YES;
 }
 							

@@ -1,9 +1,9 @@
 target 'OBLogger', :exclusive => true do
-  pod "OBLogger", :path => "../"
+  pod "OBLogger", :path => ".."
 end
 
 target 'Tests', :exclusive => true do
-  pod "OBLogger", :path => "../"
+  pod "OBLogger", :path => ".."
 
   pod 'Specta', '~> 0.2.1'
   pod 'Expecta'

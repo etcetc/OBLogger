@@ -1,9 +1,9 @@
 //
 //  OBAppDelegate.h
-//  OBLogger
+//  OBLoggerTest
 //
-//  Created by CocoaPods on 08/19/2014.
-//  Copyright (c) 2014 etcetc. All rights reserved.
+//  Created by Farhad on 8/2/14.
+//  Copyright (c) 2014 OneBeat. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>
