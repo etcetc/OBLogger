@@ -1,6 +1,9 @@
 # OS X
 .DS_Store
 
+.Trashes
+*.swp
+
 # Xcode
 build/
 *.pbxuser
@@ -15,7 +18,7 @@ xcuserdata
 *.xccheckout
 profile
 *.moved-aside
-DerivedData
+DerivedData/
 *.hmap
 *.ipa
 
@@ -26,4 +29,5 @@ DerivedData
 # you should judge for yourself, the pros and cons are mentioned at:
 # http://guides.cocoapods.org/using/using-cocoapods.html#should-i-ignore-the-pods-directory-in-source-control
 #
-# Pods/
+
+Pods/
