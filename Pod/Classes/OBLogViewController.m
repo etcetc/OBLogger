@@ -71,24 +71,37 @@
     NSMutableAttributedString * fullString =[NSMutableAttributedString new];
     NSEnumerator *e = [logLines reverseObjectEnumerator];
     NSString *line;
+    NSString *appendString = @"";
     while ( line = [e nextObject] ) {
 //    for ( NSString *line in logLines ) {
         line = [line stringByAppendingString:@"\n"];
+        line = [line stringByAppendingString:appendString];
         switch ([[OBLogger instance] lineLogLevel:line] ) {
             case OBErrorLevel:
                 logString = [logString initWithString:line attributes:@{NSForegroundColorAttributeName: [UIColor redColor]}];
+                appendString = @"";
                 break;
             case OBWarnLevel:
                 logString = [logString initWithString:line attributes:@{NSForegroundColorAttributeName: [UIColor orangeColor]}];
+                appendString = @"";
                 break;
             case OBEventLevel:
                 logString = [logString initWithString:line attributes:@{NSBackgroundColorAttributeName: [UIColor blueColor],NSForegroundColorAttributeName: [UIColor yellowColor] }];
+                appendString = @"";
                 break;
             case OBDebugLevel:
                 logString = [logString initWithString:line attributes:@{NSForegroundColorAttributeName: [UIColor grayColor]}];
+                appendString = @"";
+                break;
+            case OBInfoLevel:
+                logString = [logString initWithString:line attributes:nil];
+                appendString = @"";
                 break;
             default:
-                logString = [logString initWithString:line attributes:nil];
+//                We didnt find a valid log leve so we're assuming there were line breaks in the previous line
+//                Add the string to the beginning because we're going backwards
+                appendString = line;
+//                logString = [logString initWithString:line attributes:nil];
                 break;
         }
         [fullString appendAttributedString:logString];
