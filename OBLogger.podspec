@@ -9,7 +9,7 @@
 
 Pod::Spec.new do |s|
   s.name             = "OBLogger"
-  s.version          = "0.11"
+  s.version          = "0.2.0"
   s.summary          = "A simple logging utility"
   s.description      = <<-DESC
                        This provides some simple macros for logging debug,
@@ -19,7 +19,6 @@ log file can then be viewed via an included viewController, or retrieved.
 DESC
 
   s.homepage         = "https://github.com/etcetc/OBLogger"
-  # s.screenshots     = "www.example.com/screenshots_1", "www.example.com/screenshots_2"
   s.license          = 'MIT'
   s.author           = { "etcetc" => "ff@onebeat.com" }
   s.source           = { :git => "https://github.com/etcetc/OBLogger.git", :tag => s.version.to_s }
@@ -31,6 +30,4 @@ DESC
   s.resources = 'Pod/Assets/*.xib'
 
   s.public_header_files = 'Pod/Classes/*.h'
-  # s.frameworks = 'UIKit', 'MapKit'
-  # s.dependency 'AFNetworking', '~> 2.3'
 end

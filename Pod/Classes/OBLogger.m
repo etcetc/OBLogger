@@ -7,6 +7,7 @@
 //
 
 #import "OBLoggerCore.h"
+#import "OBLoggerNotification.h"
 
 @interface OBLogger()
 @property (nonatomic,strong) NSString * logFilePath;
@@ -28,9 +29,40 @@
     return instance;
 }
 
+-(void) logApplicationEvents: (BOOL) doLog
+{
+    if ( doLog ) {
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(appWillEnterForeground) name:UIApplicationWillEnterForegroundNotification object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(appBecameActive) name:UIApplicationDidBecomeActiveNotification object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(appWillTerminate) name:UIApplicationWillTerminateNotification object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(appWillResignActive) name:UIApplicationWillResignActiveNotification object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(appDidEnterBackground) name:UIApplicationDidEnterBackgroundNotification object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(appGotMemoryWarning) name:UIApplicationDidReceiveMemoryWarningNotification object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(appFinishedLuanching) name:UIApplicationDidFinishLaunchingNotification object:nil];
+        
+    } else {
+        [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationWillEnterForegroundNotification object:nil];
+        [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationDidBecomeActiveNotification object:nil];
+        [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationWillTerminateNotification object:nil];
+        [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationWillResignActiveNotification object:nil];
+        [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationDidEnterBackgroundNotification object:nil];
+        [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationDidReceiveMemoryWarningNotification object:nil];
+        [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationDidFinishLaunchingNotification object:nil];
+    }
+}
+
+-(void) event: (NSString *) message
+{
+    [self write:message atLevel:OBEventLevel];
+    if ( self.writeToConsole )
+        NSLog(@"EVENT: %@",message);
+}
+
+
 -(void) error: (NSString *) message
 {
     [self write:message atLevel:OBErrorLevel];
+    [[NSNotificationCenter defaultCenter] postNotificationName:OBLoggerErrorNotification object:message];
     if ( self.writeToConsole )
         NSLog(@"**** ERROR: %@",message);
 }
@@ -38,6 +70,7 @@
 -(void) warn: (NSString *) message
 {
     [self write:message atLevel:OBWarnLevel];
+    [[NSNotificationCenter defaultCenter] postNotificationName:OBLoggerWarnNotification object:message];
     if ( self.writeToConsole )
         NSLog(@"## WARN: %@",message);
 }
@@ -62,14 +95,22 @@
 {
     switch (event) {
         case OBLogEventAppBackground:
-            [self info: [NSString stringWithFormat:@"APP ENTERED BACKGROUND"]];
+            [self event: [NSString stringWithFormat:@"APP ENTERED BACKGROUND"]];
             break;
         case OBLogEventAppStarted:
-            [self info: [NSString stringWithFormat:@"APP STARTED"]];
+            [self event: [NSString stringWithFormat:@"APP STARTED"]];
             break;
 
         case OBLogEventAppForeground:
-            [self info: [NSString stringWithFormat:@"APP ENTERED FOREGROUND"]];
+            [self event: [NSString stringWithFormat:@"APP ENTERED FOREGROUND"]];
+            break;
+            
+        case OBLogEventAppActive:
+            [self event: [NSString stringWithFormat:@"APP BECAME ACTIVE"]];
+            break;
+            
+        case OBLogEventAppTerminate:
+            [self event: [NSString stringWithFormat:@"APP ABOUT TO TERMINATE"]];
             break;
             
         default:
@@ -122,6 +163,9 @@
         case OBErrorLevel:
             logLevel = @"ERROR";
             break;
+        case OBEventLevel:
+            logLevel = @"EVENT";
+            break;
         default:
             break;
     }
@@ -137,12 +181,14 @@
     NSRange x;
     if ( [logLine rangeOfString:@"DEBUG"].location != NSNotFound )
         return OBDebugLevel;
+    else if ([logLine rangeOfString:@"EVENT"].location != NSNotFound )
+        return OBEventLevel;
     else if ((x =[logLine rangeOfString:@"INFO"]).location != NSNotFound ) {
-        NSString * message = [logLine substringFromIndex:x.location + x.length + 1];
-        NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:@"^[^a-z]+$" options:0 error:nil];
-        if ( [regex matchesInString:message options:0 range:NSMakeRange(0, message.length)].count > 0 ) {
-            return OBEventLevel;
-        } else
+//        NSString * message = [logLine substringFromIndex:x.location + x.length + 1];
+//        NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:@"^[^a-z]+$" options:0 error:nil];
+//        if ( [regex matchesInString:message options:0 range:NSMakeRange(0, message.length)].count > 0 ) {
+//            return OBEventLevel;
+//        } else
             return OBInfoLevel;
         
     }
@@ -180,6 +226,46 @@
         }
     }
     return _logFilePath;
+}
+
+#pragma mark -- Notification handlers
+
+// Could handle all of these by implementing the method called when the object's message handler is not found...
+
+-(void) appWillEnterForeground
+{
+    [self event:@"App Will Enter Foreground "];
+}
+
+-(void) appBecameActive
+{
+    [self event:@"App Became Active"];
+}
+
+-(void) appWillTerminate
+{
+    [self event:@"App Will Terminate"];
+}
+
+-(void) appWillResignActive
+{
+    [self event:@"App Will Resign Active"];
+    
+}
+
+-(void) appDidEnterBackground
+{
+    [self event:@"App Entered Background"];
+}
+
+-(void) appGotMemoryWarning
+{
+    [self event:@"App Received a Memory Warning"];
+}
+
+-(void) appFinishedLuanching
+{
+    [self event:@"App Finished Launching"];
 }
 
 @end

@@ -12,14 +12,15 @@
 #define OBLoggerCore_h
 
 typedef NS_ENUM(NSUInteger, OBLogLevel) {
-    OBUnknownLevel,
-    OBDebugLevel,
-    OBInfoLevel,
-    OBWarnLevel,
-    OBErrorLevel,
-    OBEventLevel
+    OBUnknownLevel = 0,
+    OBDebugLevel = 2<<0,
+    OBInfoLevel = 2<<1,
+    OBWarnLevel = 2<<2,
+    OBErrorLevel = 2<<3,
+    OBEventLevel = 2<<4
 };
 
+// Deprecated!
 typedef NS_ENUM(NSUInteger, OBLogEvent) {
     OBLogEventAppStarted,
     OBLogEventAppBackground,
@@ -48,7 +49,7 @@ typedef NS_ENUM(NSUInteger, OBLogEvent) {
 #endif
 
 #ifndef OB_EVENT
-#define OB_EVENT(event) [[OBLogger instance] logEvent: event]
+#define OB_EVENT(message,...) [[OBLogger instance] event:[NSString stringWithFormat:(message),##__VA_ARGS__]]
 #endif
 
 @interface OBLogger : NSObject
@@ -62,15 +63,17 @@ typedef NS_ENUM(NSUInteger, OBLogEvent) {
 -(OBLogLevel) lineLogLevel: (NSString *) logLine;
 
 // You will probably prefer to use the macros instead of these
--(void) error: (NSString *) error;
--(void) warn: (NSString *) error;
--(void) info: (NSString *) error;
--(void) debug: (NSString *) error;
+-(void) error: (NSString *) message;
+-(void) warn: (NSString *) message;
+-(void) info: (NSString *) message;
+-(void) debug: (NSString *) message;
+-(void) event: (NSString *) message;
 
 // use this one to log discrete events as defined above, typically associated with app state changes
 -(void) logEvent: (OBLogEvent)event;
 
 -(void) reset;
+-(void) logApplicationEvents: (BOOL) doLog;
 -(NSString *) logFilePath;
 
 @end

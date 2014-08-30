@@ -12,4 +12,5 @@
 // functions into the "core" and the "controller" groups.  It's a little funky.
 #import "OBLoggerCore.h"
 #import "OBLogViewController.h"
+#import "OBLoggerNotification.h"
 
