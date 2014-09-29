@@ -9,7 +9,7 @@
 
 Pod::Spec.new do |s|
   s.name             = "OBLogger"
-  s.version          = "0.2.0"
+  s.version          = "0.2.1"
   s.summary          = "A simple logging utility"
   s.description      = <<-DESC
                        This provides some simple macros for logging debug,
