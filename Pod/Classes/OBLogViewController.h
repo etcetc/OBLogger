@@ -22,6 +22,5 @@
 - (IBAction)done:(id)sender;
 - (IBAction)clearLog:(id)sender;
 - (IBAction)pickLevel:(id)sender;
-- (IBAction)levelPicked:(id)sender;
 
 @end

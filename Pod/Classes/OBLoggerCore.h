@@ -2,7 +2,7 @@
 //  OBLoggerCore.h
 //  OBLogger
 //
-//  Created by Farhad on 8/13/14.
+//  Created by Farhad Farzaneh on 8/13/14.
 //  Copyright (c) 2014 OneBeat. All rights reserved.
 //
 

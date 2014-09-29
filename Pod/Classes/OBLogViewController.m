@@ -52,13 +52,13 @@
     [super viewDidLoad];
     if ( self.logLevelsToShow == 0 )
         [self setShowLogLevel:OBDebugLevel];
-    self.currentLevel.text = [self logLevelAsString: self.logLevelsToShow];
 }
 
 -(void) viewWillAppear:(BOOL)animated
 {
     [self displayLog];
     self.levelPicker.hidden = YES;
+    self.currentLevel.text = [self logLevelAsString: self.logLevelsToShow];
 }
 
 - (void)didReceiveMemoryWarning
@@ -165,14 +165,16 @@
 
 -(NSString *) logLevelAsString: (OBLogLevel) level
 {
-    NSDictionary *index = @{
-                            [NSNumber numberWithInt:OBEventLevel]: @"Event",
-                            [NSNumber numberWithInt:OBErrorLevel]: @"Error" ,
-                            [NSNumber numberWithInt:OBWarnLevel]: @"Warn",
-                            [NSNumber numberWithInt:OBInfoLevel]: @"Info" ,
-                            [NSNumber numberWithInt:OBDebugLevel]: @"Debug"
-                            };
-    return index[[NSNumber numberWithInt:level]];
+    if ( level & OBDebugLevel )
+        return @"Debug";
+    else if (level & OBInfoLevel )
+        return @"Info";
+    else if (level & OBWarnLevel )
+        return @"Warn";
+    else if ( level & OBErrorLevel )
+        return @"Error";
+    else
+        return @"Event";
 }
 
 -(NSInteger)numberOfComponentsInPickerView:(UIPickerView *)pickerView
@@ -193,7 +195,7 @@
 -(void) pickerView:(UIPickerView *)pickerView didSelectRow:(NSInteger)row inComponent:(NSInteger)component
 {
     NSString *logLevel = [[self class] logLevels][row];
-    
+    self.currentLevel.text = logLevel;
     [self setShowLogLevel:[self levelForStringLevel: logLevel]] ;
     self.levelPicker.hidden = YES;
     [self displayLog];
