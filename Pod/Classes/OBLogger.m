@@ -54,6 +54,7 @@
 -(void) event: (NSString *) message
 {
     [self write:message atLevel:OBEventLevel];
+	[[NSNotificationCenter defaultCenter] postNotificationName:OBLoggerEventNotification object:message];
     if ( self.writeToConsole )
         NSLog(@"EVENT: %@",message);
 }
@@ -79,6 +80,7 @@
 -(void) info: (NSString *) message
 {
     [self write:message atLevel:OBInfoLevel];
+	[[NSNotificationCenter defaultCenter] postNotificationName:OBLoggerInfoNotification object:message];
     if ( self.writeToConsole )
         NSLog(@"INFO: %@",message);
 }
@@ -86,6 +88,7 @@
 -(void) debug: (NSString *) message
 {
     [self write:message atLevel:OBDebugLevel];
+	[[NSNotificationCenter defaultCenter] postNotificationName:OBLoggerDebugNotification object:message];
     if ( self.writeToConsole )
         NSLog(@"DEBUG: %@",message);
 }
