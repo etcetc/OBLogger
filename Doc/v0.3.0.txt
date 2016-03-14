@@ -1,0 +1,5 @@
+RELEASE NOTES
+=============
+
+v0.3.0 3/14/2016
+Use UTC timestamps in log.

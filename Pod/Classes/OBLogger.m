@@ -39,7 +39,7 @@
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(appDidEnterBackground) name:UIApplicationDidEnterBackgroundNotification object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(appGotMemoryWarning) name:UIApplicationDidReceiveMemoryWarningNotification object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(appFinishedLuanching) name:UIApplicationDidFinishLaunchingNotification object:nil];
-        
+
     } else {
         [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationWillEnterForegroundNotification object:nil];
         [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationDidBecomeActiveNotification object:nil];
@@ -107,15 +107,15 @@
         case OBLogEventAppForeground:
             [self event: [NSString stringWithFormat:@"APP ENTERED FOREGROUND"]];
             break;
-            
+
         case OBLogEventAppActive:
             [self event: [NSString stringWithFormat:@"APP BECAME ACTIVE"]];
             break;
-            
+
         case OBLogEventAppTerminate:
             [self event: [NSString stringWithFormat:@"APP ABOUT TO TERMINATE"]];
             break;
-            
+
         default:
             break;
     }
@@ -136,6 +136,7 @@
         _formatter = [NSDateFormatter new];
         _formatter.timeStyle = NSDateFormatterMediumStyle;
         _formatter.dateStyle = NSDateFormatterShortStyle;
+        _formatter.timeZone = [NSTimeZone timeZoneWithAbbreviation:@"UTC"];
     });
     return [_formatter stringFromDate:[NSDate date]];
 }
@@ -193,7 +194,7 @@
 //            return OBEventLevel;
 //        } else
             return OBInfoLevel;
-        
+
     }
     else if ([logLine rangeOfString:@"WARN"].location != NSNotFound )
         return OBWarnLevel;
@@ -253,7 +254,7 @@
 -(void) appWillResignActive
 {
     [self event:@"App Will Resign Active"];
-    
+
 }
 
 -(void) appDidEnterBackground
